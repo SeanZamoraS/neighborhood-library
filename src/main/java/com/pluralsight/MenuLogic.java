@@ -25,10 +25,58 @@ public class MenuLogic
             System.out.println("Title: " + fullLibrary[i].getTitle() + "\n");
         }
 
+        startMenu(false);
+
 
     }
 
-    public static void startMenu()
+    public static void startMenu(boolean ranOnce)
+    {
+        if(ranOnce == false)
+        {
+            System.out.println("Welcome to the neighborhood library!");
+        }
+        System.out.println("""
+                What would you like to do?
+                Please enter 1, 2, or 3.
+                
+                1) Check out a book/see available books
+                2) Return a book/see checked out books
+                3) Close program \n""");
+
+        String userSelection = input.nextLine();
+
+        switch(userSelection)
+        {
+            case "1":
+                checkOutMenu();
+                break;
+
+            case "2":
+                checkInMenu();
+                break;
+
+            case "3":
+                System.out.println("Thank you for using the neighborhood library. Goodbye!");
+                System.exit(0);
+                break;
+
+            default:
+                System.out.println("\u001B[1mPlease make a valid selection.\u001B");
+                startMenu(true);
+                break;
+        }
+
+
+
+    }
+
+    public static void checkOutMenu()
+    {
+
+    }
+
+    public static void checkInMenu()
     {
 
     }
