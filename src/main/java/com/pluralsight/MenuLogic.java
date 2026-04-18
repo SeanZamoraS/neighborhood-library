@@ -19,11 +19,11 @@ public class MenuLogic
         assignIDBookArray(AMOUNT, fullLibrary);
 
         //test:
-        for (int i = 0; i < fullLibrary.length; ++i)
-        {
-            System.out.println("\nID: " + fullLibrary[i].getID());
-            System.out.println("Title: " + fullLibrary[i].getTitle() + "\n");
-        }
+        //for (int i = 0; i < fullLibrary.length; ++i)
+        //{
+            //System.out.println("\nID: " + fullLibrary[i].getID());
+            //System.out.println("Title: " + fullLibrary[i].getTitle() + "\n");
+        //}
 
         startMenu(false);
 
@@ -36,6 +36,7 @@ public class MenuLogic
         {
             System.out.println("Welcome to the neighborhood library!");
         }
+
         System.out.println("""
                 What would you like to do?
                 Please enter 1, 2, or 3.
@@ -66,13 +67,37 @@ public class MenuLogic
                 startMenu(true);
                 break;
         }
-
-
-
     }
 
     public static void checkOutMenu()
     {
+        //you might be able to make comment below a class method createCheckOutArray()?
+        //find number of books available and create array to hold
+        int numberAvailable = 0;
+        for(int i = 0; i < fullLibrary.length; i++)
+        {
+            if (fullLibrary[i].getCheckOutStatus() == false)
+            {
+                ++numberAvailable;
+            }
+        }
+        Book[] availableBooks = new Book[numberAvailable];
+        System.out.println(availableBooks.length);
+
+        for(int count = 0; count < fullLibrary.length; count++)
+        {
+            if (fullLibrary[count].getCheckOutStatus() == false)
+            {
+                availableBooks[count] = fullLibrary[count];
+            }
+        }
+        System.out.println("Here is our list of available books: ");
+        for (int i = 0; i < availableBooks.length; ++i)
+        {
+            System.out.println("\nID: " + availableBooks[i].getID());
+            System.out.println("ISBN: " + availableBooks[i].getISBN());
+            System.out.println("Title: " + availableBooks[i].getTitle() + "\n");
+        }
 
     }
 
