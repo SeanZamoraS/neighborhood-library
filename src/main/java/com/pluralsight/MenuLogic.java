@@ -12,8 +12,7 @@ public class MenuLogic
     static Book[] fullLibrary;
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws InterruptedException {
         //setting up the array
         fullLibrary = createHardcodedBookArray();
         assignIDBookArray(AMOUNT, fullLibrary);
@@ -30,8 +29,7 @@ public class MenuLogic
 
     }
 
-    public static void startMenu(boolean ranOnce)
-    {
+    public static void startMenu(boolean ranOnce) throws InterruptedException {
         if(ranOnce == false)
         {
             System.out.println("Welcome to the neighborhood library!");
@@ -69,8 +67,7 @@ public class MenuLogic
         }
     }
 
-    public static void checkOutMenu()
-    {
+    public static void checkOutMenu() throws InterruptedException {
         //you might be able to make comment below a class method createCheckOutArray()?
         //find number of books available and create array to hold
         int numberAvailable = 0;
@@ -91,14 +88,91 @@ public class MenuLogic
                 availableBooks[count] = fullLibrary[count];
             }
         }
-        System.out.println("Here is our list of available books: ");
+        System.out.println("Getting our list of available books... \n");
+        Thread.sleep(2000);
         for (int i = 0; i < availableBooks.length; ++i)
         {
+            Thread.sleep(800);
             System.out.println("\nID: " + availableBooks[i].getID());
             System.out.println("ISBN: " + availableBooks[i].getISBN());
             System.out.println("Title: " + availableBooks[i].getTitle() + "\n");
         }
+        System.out.println("""
+                What would you like to do?
+                Please enter 1 or 2.
+                
+                1) Check out a book from the list
+                2) Return to main menu \n""");
 
+        String userSelection = input.nextLine();
+
+        switch(userSelection)
+        {
+            case "1":
+                System.out.println("What is the ID number of the book you would like to checkout?");
+                int bookID = receiveValidInteger();
+
+                for(int i = 0; i < availableBooks.length; i++)
+                {
+                    if (availableBooks[i].getID() == bookID)
+                    {
+                        System.out.println("Checking out " + availableBooks[i].getTitle() + ".\n");
+                        System.out.println("Please enter your name: \n");
+                        String name = input.nextLine();
+                        availableBooks[i].setCheckedOutTo(name);
+                        availableBooks[i].setCheckOutStatus(true);
+
+
+                        System.out.println("""
+                                Please enter either 1 or 2.
+                                
+                                1) Check out another book
+                                2) Return to the main menu""");
+
+                        String userMenu = input.nextLine();
+                        switch (userMenu)
+                        {
+                            case "1":
+                                checkOutMenu();
+                            case "2":
+                                startMenu(true);
+                        }
+
+                    }
+                }
+            case "2":
+            {
+                startMenu(true);
+            }
+            default:
+            {
+                System.out.println("Please make a valid selection.");
+                checkOutMenu();
+            }
+        }
+
+    }
+
+    public static int receiveValidInteger() //re-used/added on from theater reservations
+    {
+        while (true)
+        {
+            try
+            {
+                int bookID = input.nextInt();
+                if (bookID >= 1 && bookID <= AMOUNT) {return bookID;}
+                else
+                {
+                    System.out.println("Please check the book ID and try again:\n");
+                    input.nextLine();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("Please enter a valid ID (numbers only):\n");
+                input.nextLine();
+            }
+        }
     }
 
     public static void checkInMenu()
