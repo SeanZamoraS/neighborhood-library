@@ -38,7 +38,8 @@ public class MenuLogic
     {
         for(int i = 0; i < amount; i++)
         {
-            //libraryBooks[i] = new Book();
+            //top line saves me from an exception if i forgot a book in hardcoded array, such as [3] last time
+            if (libraryBooks[i] == null) {continue;}
             libraryBooks[i].setID(i + 1);
         }
     }
