@@ -70,24 +70,8 @@ public class MenuLogic
     public static void checkOutMenu() throws InterruptedException {
         //you might be able to make comment below a class method createCheckOutArray()?
         //find number of books available and create array to hold
-        int numberAvailable = 0;
-        for(int i = 0; i < fullLibrary.length; i++)
-        {
-            if (fullLibrary[i].getCheckOutStatus() == false)
-            {
-                ++numberAvailable;
-            }
-        }
-        Book[] availableBooks = new Book[numberAvailable];
-        System.out.println(availableBooks.length);
+        Book[] availableBooks = createCheckoutArray();
 
-        for(int count = 0; count < fullLibrary.length; count++)
-        {
-            if (fullLibrary[count].getCheckOutStatus() == false)
-            {
-                availableBooks[count] = fullLibrary[count];
-            }
-        }
         System.out.println("Getting our list of available books... \n");
         Thread.sleep(2000);
         for (int i = 0; i < availableBooks.length; ++i)
@@ -134,15 +118,19 @@ public class MenuLogic
                         {
                             case "1":
                                 checkOutMenu();
+                                break;
                             case "2":
                                 startMenu(true);
+                                break;
                         }
 
                     }
                 }
+                break; //forgot the case 1 break here, will destroy menu on 2nd loop if not added
             case "2":
             {
                 startMenu(true);
+                break;
             }
             default:
             {
@@ -153,6 +141,31 @@ public class MenuLogic
 
     }
 
+    public static Book[] createCheckoutArray()
+    {
+        int numberAvailable = 0;
+        for(int i = 0; i < fullLibrary.length; i++)
+        {
+            if (fullLibrary[i].getCheckOutStatus() == false)
+            {
+                ++numberAvailable;
+            }
+        }
+        Book[] availableBooks = new Book[numberAvailable];
+        System.out.println(availableBooks.length);
+
+        int availableBooksIndex = 0; //count++ goes up regardless, aBIndex goes up only when available
+        for(int count = 0; count < fullLibrary.length; count++)
+        {
+            if (fullLibrary[count].getCheckOutStatus() == false)
+            {
+                availableBooks[availableBooksIndex] = fullLibrary[count];
+                availableBooksIndex++;
+            }
+        }
+        return availableBooks;
+    }
+
     public static int receiveValidInteger() //re-used/added on from theater reservations
     {
         while (true)
@@ -160,6 +173,7 @@ public class MenuLogic
             try
             {
                 int bookID = input.nextInt();
+                input.nextLine();
                 if (bookID >= 1 && bookID <= AMOUNT) {return bookID;}
                 else
                 {
@@ -170,7 +184,6 @@ public class MenuLogic
             catch (Exception e)
             {
                 System.out.println("Please enter a valid ID (numbers only):\n");
-                input.nextLine();
             }
         }
     }
