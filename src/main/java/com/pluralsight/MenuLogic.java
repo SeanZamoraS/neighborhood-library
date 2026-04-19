@@ -122,6 +122,9 @@ public class MenuLogic
                             case "2":
                                 startMenu(true);
                                 break;
+                            default:
+                                startMenu(true);
+                                break;
                         }
 
                     }
@@ -139,6 +142,31 @@ public class MenuLogic
             }
         }
 
+    }
+
+    public static Book[] createCheckInArray()
+    {
+        int numberUnavailable = 0;
+        for(int i = 0; i < fullLibrary.length; i++)
+        {
+            if (fullLibrary[i].getCheckOutStatus() == true)
+            {
+                ++numberUnavailable;
+            }
+        }
+        Book[] unavailableBooks = new Book[numberUnavailable];
+        System.out.println(unavailableBooks.length);
+
+        int unavailableBooksIndex = 0;
+        for(int count = 0; count < fullLibrary.length; count++)
+        {
+            if (fullLibrary[count].getCheckOutStatus() == true)
+            {
+                unavailableBooks[unavailableBooksIndex] = fullLibrary[count];
+                unavailableBooksIndex++;
+            }
+        }
+        return unavailableBooks;
     }
 
     public static Book[] createCheckoutArray()
@@ -188,9 +216,90 @@ public class MenuLogic
         }
     }
 
-    public static void checkInMenu()
-    {
+    public static void checkInMenu() throws InterruptedException {
+        Book[] unavailableBooks = createCheckInArray();
 
+        System.out.println("Finding checked out books... \n");
+        Thread.sleep(2000);
+        for (int i = 0; i < unavailableBooks.length; ++i)
+        {
+            Thread.sleep(800);
+            System.out.println("\nID: " + unavailableBooks[i].getID());
+            System.out.println("ISBN: " + unavailableBooks[i].getISBN());
+            System.out.println("Title: " + unavailableBooks[i].getTitle());
+            System.out.println("Checked out by: " + unavailableBooks[i].getWhoCheckedOut() + "\n");
+        }
+        if (unavailableBooks.length == 0)
+        {
+            System.out.println("There are no checked out books currently. Returning to main menu. \n");
+            Thread.sleep(2000);
+            startMenu(true);
+        }
+
+        System.out.println("""
+                What would you like to do?
+                Please enter 1 or 2.
+                
+                1) Return a book
+                2) Return to main menu \n""");
+
+        String userInput = input.nextLine();
+        switch(userInput)
+        {
+            case "1":
+                System.out.println("Enter the ID of the book you would like to return. \n");
+
+                int userID = receiveValidInteger();
+
+                for(int i = 0; i < unavailableBooks.length; i++)
+                {
+                    if(userID == unavailableBooks[i].getID())
+                    {
+                        System.out.println("Checking in " + unavailableBooks[i].getTitle() + ".\n");
+                        unavailableBooks[i].setCheckOutStatus(false);
+                        unavailableBooks[i].setCheckedOutTo("This book is not checked out yet.");
+
+                        System.out.println("""
+                                Please enter 1 or 2.
+                                
+                                1) Check in another book
+                                2) Return to main menu""");
+
+                        String userSelection = input.nextLine();
+                        switch(userSelection)
+                        {
+                            case "1":
+                                checkInMenu();
+                                break;
+
+                            case "2":
+                                startMenu(true);
+                                break;
+
+                            default:
+                                startMenu(true);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("Book with ID " + userInput + " is already checked in.\n");
+                        System.out.println("Returning to check in menu list for your review.");
+                        Thread.sleep(2000);
+                        checkInMenu();
+                    }
+                }
+                break;
+
+            case "2":
+                startMenu(true);
+                break;
+
+            default:
+                System.out.println("Please make a valid selection.");
+                checkInMenu();
+                break;
+        }
     }
 
     public static void assignIDBookArray(int amount, Book[] libraryBooks)
@@ -207,6 +316,7 @@ public class MenuLogic
     public static Book[] createHardcodedBookArray()
     //Maybe in the future I could pull ISBN/Title from an API search and add an addBookFromAPI function
     //then also return a new amt of books for the createBookArray() OR alternative read ISBN/title from a .txt
+    //or if we're really getting crazy SQL
     {
         Book[] libraryBooks = new Book[AMOUNT];
 
